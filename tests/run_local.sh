@@ -30,6 +30,9 @@ while IFS== read -r key value; do
    export "$key=$value"
 done < <(jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' params.json)
 
+# Create symlink to analysis directory
+ln -sf $BASEDIR $RIVER_HOME/jobs/job_id/analysis
+
 git=$(git remote get-url origin 2>/dev/null)
 repo_name=$(basename -s .git "$git")
 owner=$(basename "$(dirname "$git")")
