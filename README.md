@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # template-analysis
 The template for analysis, easier for user to use this to create new tool from this template that can be run with river
 =======
@@ -12,4 +11,3 @@ bash tests/run_local.sh
 ## Prerequisites
 Install micromamba
 https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html
->>>>>>> template/main
