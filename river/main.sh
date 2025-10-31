@@ -52,6 +52,4 @@ echo "============================================="
 
 cd $RIVER_HOME/jobs/$job_id/analysis
 ENV=web-template-analysis-$tag
-micromamba create -n $ENV python -y 
-micromamba run -n $ENV pip install -r requirements.txt
-micromamba run -n $ENV streamlit run river/app.py --server.port $PORT --server.headless true
+pixi run streamlit run river/app.py --server.port $PORT --server.headless true
