@@ -3,22 +3,29 @@
 export BASEDIR=$PWD
 export RIVER_HOME=$PWD/work
 export job_id="job_id"
+export PIXI_HOME=$RIVER_HOME/.pixi
+
 mkdir -p $RIVER_HOME/jobs/job_id
 cp $PWD/tests/params.json $RIVER_HOME/jobs/job_id/params.json
 cd $RIVER_HOME/jobs/job_id
+
 ###########################################################################################################################
-# Simulate flow of job script
-echo "Checking requirements"
-which micromamba || (echo "micromamba not found. Please install micromamba and try again." && exit 1)
+# === Install pixi ===
+which pixi || curl -fsSL https://pixi.sh/install.sh | sh
+export PATH=$PATH:$HOME/.pixi/bin
+pixi config append default-channels bioconda --global
+pixi config append default-channels conda-forge --global
+pixi global install nextflow jq git singularity python=3.14
 
-# Install dependencies
-if ! micromamba env list | grep -q 'river'; then
-    micromamba create -y -n river python=3.12 conda-forge::singularity=3.8.6 bioconda::nextflow jq git -y
+
+# === Install Goofys if missing ===
+if [ ! -f "$GOOFYS_PATH" ]; then
+    echo "Installing goofys..."
+    curl -L https://github.com/kahing/goofys/releases/download/v0.24.0/goofys -o "$GOOFYS_PATH"
+    chmod +x "$GOOFYS_PATH"
+else
+    echo "Goofys already exists at: $GOOFYS_PATH"
 fi
-
-# Activate environment
-eval "$(micromamba shell hook --shell bash)"
-micromamba activate river
 
 # Setup networking
 export PORT=$(python -c "import socket; s=socket.socket(); s.bind(('',0)); print(s.getsockname()[1]); s.close()")
